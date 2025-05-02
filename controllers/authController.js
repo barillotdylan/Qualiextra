@@ -10,14 +10,19 @@ const { User } = db;
 export const register = async (req, res) => {
   const { prenom, nom, email, password } = req.body;
 
-  if (isTemporaryEmail(email)) {
-    return res.status(400).json({ error: 'Adresse email temporaire interdite' });
-  }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const emailToken = uuidv4();
-
   try {
+    if (isTemporaryEmail(email)) {
+      return res.status(400).json({ error: 'Adresse email temporaire interdite' });
+    }
+
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser) {
+      return res.status(400).json({ error: 'Email déjà utilisé' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const emailToken = uuidv4();
+
     const user = await User.create({
       prenom,
       nom,
@@ -28,8 +33,10 @@ export const register = async (req, res) => {
 
     await sendEmail(email, emailToken);
     res.status(201).json({ message: 'Utilisateur créé. Vérifiez votre email.' });
+
   } catch (e) {
-    res.status(400).json({ error: 'Email déjà utilisé' });
+    console.error('Erreur register:', e);
+    res.status(500).json({ error: 'Erreur serveur' });
   }
 };
 
