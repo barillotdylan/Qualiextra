@@ -1,14 +1,13 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import db from '../models/index.js';
+import User from '../models/user.js';
 import sendEmail from '../utils/sendEmail.js';
 import isTemporaryEmail from '../utils/tempEmailBlocker.js';
 import { v4 as uuidv4 } from 'uuid';
 
-const { User } = db;
 
 export const register = async (req, res) => {
-  const { prenom, nom, email, password } = req.body;
+  const { name, email, password } = req.body;
 
   try {
     if (isTemporaryEmail(email)) {
@@ -24,8 +23,7 @@ export const register = async (req, res) => {
     const emailToken = uuidv4();
 
     const user = await User.create({
-      prenom,
-      nom,
+      name,
       email,
       password: hashedPassword,
       emailToken,

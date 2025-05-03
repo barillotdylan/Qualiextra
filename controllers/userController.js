@@ -1,6 +1,4 @@
-import db from '../models/index.js';
-
-const { User } = db;
+import User from "../models/user.js";
 
 export const getMe = async (req, res) => {
   const user = await User.findByPk(req.user.id);
@@ -14,7 +12,14 @@ export const updateMe = async (req, res) => {
 };
 
 export const getAllUsers = async (req, res) => {
-  const users = await User.findAll();
+  try {
+    const users = await User.findAll();
+    res.json(users);
+  }
+  catch (error) {
+    console.error('Erreur lors de la récupération des utilisateurs:', error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
   res.json(users);
 };
 

@@ -13,15 +13,14 @@ INSERT INTO roles (name, description) VALUES
 -- Table des utilisateurs
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
-    prenom VARCHAR(50) NOT NULL,
-    nom VARCHAR(50) NOT NULL,
+    name VARCHAR(50) NOT NULL,          -- Renommé 'prenom' et 'nom' en 'name' pour simplifier
     email VARCHAR(100) UNIQUE NOT NULL,
     password TEXT NOT NULL,
     emailToken TEXT,
     isVerified BOOLEAN DEFAULT FALSE,
     role_id INTEGER REFERENCES roles(id) ON DELETE SET NULL,
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Adapté à 'created_at' et 'updated_at' comme dans Sequelize
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Table des sessions d'authentification
@@ -29,7 +28,7 @@ CREATE TABLE IF NOT EXISTS sessions (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     token TEXT NOT NULL,
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Table de réinitialisation des mots de passe
@@ -37,8 +36,8 @@ CREATE TABLE IF NOT EXISTS password_resets (
     id SERIAL PRIMARY KEY,
     email VARCHAR(100) NOT NULL,
     token TEXT NOT NULL,
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    expiresAt TIMESTAMP NOT NULL
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP NOT NULL
 );
 
 -- Table de logs d'audit (suivi des actions des utilisateurs)
@@ -64,8 +63,8 @@ CREATE TABLE IF NOT EXISTS user_tokens (
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     token TEXT NOT NULL,
     type VARCHAR(50) NOT NULL,
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    expiresAt TIMESTAMP NOT NULL
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP NOT NULL
 );
 
 -- Table des activités des utilisateurs
@@ -74,7 +73,7 @@ CREATE TABLE IF NOT EXISTS user_activity (
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     activity_type VARCHAR(100),
     description TEXT,
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Table de la relation utilisateur - rôle (si un utilisateur peut avoir plusieurs rôles)

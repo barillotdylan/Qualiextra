@@ -4,7 +4,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 import express from 'express';
 import cors from 'cors';
-import { sequelize } from './models/index.js';
 
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
@@ -23,6 +22,5 @@ app.get('/private', authenticate, (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-sequelize.sync().then(() => {
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-});
+

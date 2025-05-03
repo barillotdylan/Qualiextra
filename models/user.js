@@ -1,23 +1,30 @@
-export default (sequelize, DataTypes) => {
-    const User = sequelize.define('User', {
-      prenom: DataTypes.STRING,
-      nom: DataTypes.STRING,
-      email: {
-        type: DataTypes.STRING,
-        unique: true
-      },
-      password: DataTypes.STRING,
-      role: {
-        type: DataTypes.STRING,
-        defaultValue: 'user'
-      },
-      isVerified: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false
-      },
-      emailToken: DataTypes.STRING
-    });
-  
-    return User;
-  };
-  
+import sequelize from "./connect.js";
+import { Sequelize, DataTypes, Model } from "sequelize";
+
+class User extends Model {}
+
+User.init({
+	name: {
+		type: DataTypes.TEXT,
+		allowNull: false,
+		unique: true
+	},
+	email: {
+		type: DataTypes.TEXT,
+		allowNull: false,
+		unique: true
+	},
+	password: {
+		type: DataTypes.TEXT,
+		allowNull: false,
+	},
+  isVerified: {
+    type: DataTypes.BOOLEAN,
+    },
+},
+{
+	sequelize,
+	tableName: "user",
+});
+
+export default User;
